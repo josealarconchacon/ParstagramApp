@@ -1,35 +1,32 @@
 //
-//  CameraViewController.swift
+//  SetImagViewController.swift
 //  ParstagramApp
 //
-//  Created by Jose Alarcon Chacon on 11/10/19.
+//  Created by Jose Alarcon Chacon on 11/12/19.
 //  Copyright © 2019 Jose Alarcon Chacon. All rights reserved.
 //
 
 import UIKit
-import AlamofireImage
 import Parse
 
-class CameraViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class SetImagViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var commentField: UITextField!
-    
+    @IBOutlet weak var userImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        userImage.layer.borderWidth = 0.1
+        userImage.layer.masksToBounds = false
+        userImage.layer.borderColor = UIColor.black.cgColor
+        userImage.layer.cornerRadius = userImage.frame.height/2
+        userImage.clipsToBounds = true
+    }
 
-    }
-    @IBAction func submitButton(_ sender: Any) {
-        submitPost()
-    }
-    
     func submitPost() {
-        let post = PFObject(className: "Posts")
-        post["caption"] = commentField.text!
+        let post = PFObject(className: "UserPhoto")
         post["author"] = PFUser.current()!
         
-        let imageData = imageView.image!.pngData()
+        let imageData = userImage.image!.pngData()
         let fileObject = PFFileObject(data: imageData!)
         post["image"] = fileObject
         
@@ -43,11 +40,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
         }
     }
     
-    @IBAction func gestureOnCameraButton(_ sender: Any) {
-        picker()
-    }
-    
-    func picker() {
+    @IBAction func setImage(_ sender: Any) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
@@ -58,12 +51,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
         }
         present(imagePicker, animated: true, completion: nil)
     }
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let imageInfo = info[.editedImage] as! UIImage
         let imageSize = CGSize(width: 300, height: 300)
         let scaleImage = imageInfo.af_imageScaled(to: imageSize)
-        imageView.image = scaleImage
+        userImage.image = scaleImage
+        submitPost()
         dismiss(animated: true, completion: nil)
     }
 }
