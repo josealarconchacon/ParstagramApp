@@ -13,5 +13,5 @@ The following **required** functionality is completed:
 
 ## Video Walkthrough
 
-For a short demo, click here: <a href="https://app-screenshots-jose-alarcon-chacon.s3.us-east-2.amazonaws.com/Parstagram-Paert-1.gif">Parstagram</a>
+For a short demo, click here: <a href="https://app-screenshots-jose-alarcon-chacon.s3.us-east-2.amazonaws.com/Parstgram-1.gif">Parstagram</a>
 
