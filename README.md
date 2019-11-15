@@ -15,4 +15,4 @@ The following **required** functionality is completed:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://app-screenshots-jose-alarcon-chacon.s3.us-east-2.amazonaws.com/Parstagram-Paert-1.gif' width='' alt='Video Walkthrough' />
+<img src='https://app-screenshots-jose-alarcon-chacon.s3.us-east-2.amazonaws.com/Parstagram-Paert-1.gif' width='' alt='Video Walkthrough'/>
