@@ -13,6 +13,5 @@ The following **required** functionality is completed:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
+For a short demo, click here: <a href="https://app-screenshots-jose-alarcon-chacon.s3.us-east-2.amazonaws.com/Parstagram-Paert-1.gif">Parstagram</a>
 
-<img src='https://app-screenshots-jose-alarcon-chacon.s3.us-east-2.amazonaws.com/Parstagram-Paert-1.gif' width='' alt='Video Walkthrough'/>
