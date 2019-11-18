@@ -1,18 +1,18 @@
 //
-//  PostTableViewCell.swift
+//  CommentTableViewCell.swift
 //  ParstagramApp
 //
-//  Created by Jose Alarcon Chacon on 11/10/19.
+//  Created by Jose Alarcon Chacon on 11/17/19.
 //  Copyright © 2019 Jose Alarcon Chacon. All rights reserved.
 //
 
 import UIKit
 
-class PostTableViewCell: UITableViewCell {
+class CommentTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var photoImageView: UIImageView!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var commentLabel: UILabel!
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()

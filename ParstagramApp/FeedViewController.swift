@@ -10,22 +10,45 @@ import UIKit
 import Parse
 import AlamofireImage
 import Alamofire
+import MessageInputBar
 
-class FeedViewController: UIViewController, UIScrollViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UNUserNotificationCenterDelegate
- {
+class FeedViewController: UIViewController, MessageInputBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
+    let commentBar = MessageInputBar()
+    var showCommentBar = false
     
+    var window: UIWindow?
     var posts = [PFObject]()
     var userposts = [PFObject]()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        commentBar.inputTextView.placeholder = "Add a comment..."
+//        commentBar.sendButton.image = UIImageView(image: UIImage(named: ""))
+        commentBar.sendButton.title = "Post"
+        commentBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.tableFooterView = UIView()
+        tableView.keyboardDismissMode = .interactive
+        let center = NotificationCenter.default
+        center.addObserver(self, selector: #selector(heyboardWillBeHiden), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        tableView.tableFooterView = UIView()
         DataRequest.addAcceptableImageContentTypes(["application/octet-stream"])
+    }
+    
+    override var inputAccessoryView: UIView? {
+        return commentBar
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return showCommentBar
+    }
+    
+    @objc func heyboardWillBeHiden(note: Notification) {
+        commentBar.inputTextView.text = nil
+        showCommentBar = false
+        becomeFirstResponder()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -35,9 +58,8 @@ class FeedViewController: UIViewController, UIScrollViewDelegate, UIImagePickerC
     
     func queryPost() {
         let query = PFQuery(className: "Posts")
-        query.includeKey("author")
+        query.includeKeys(["author", "comments", "comments.author"])
         query.limit = 20
-        
         query.findObjectsInBackground { (posts, error) in
             if posts != nil {
                 self.posts = posts!
@@ -46,30 +68,82 @@ class FeedViewController: UIViewController, UIScrollViewDelegate, UIImagePickerC
                 print("Error: \(error!.localizedDescription)")
             }
         }
-
+    }
+    func messageInputBar(_ inputBar: MessageInputBar, didPressSendButtonWith text: String) {
+        // Create a comment
+        
+        // clear and dissmis input
+        commentBar.inputTextView.text = nil
+        showCommentBar = false
+        becomeFirstResponder()
+        commentBar.inputTextView.resignFirstResponder()
+    }
+    
+    @IBAction func onLogoutButton(_ sender: Any) {
+        PFUser.logOut()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let destination = storyboard.instantiateViewController(withIdentifier: "ViewController")
+        let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
+        sceneDelegate.window?.rootViewController = destination
     }
 }
 
 extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let post = posts[section]
+        let comments = (post["comments"] as? [PFObject]) ?? []
+        return comments.count + 2
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell") as! PostTableViewCell
-        let post = posts[indexPath.row]
-        let user = post["author"] as? PFUser
-        cell.usernameLabel.text = user?.username
-        cell.captionLabel.text = post["caption"] as? String
-
-        let imageFile = post["image"] as! PFFileObject
-        let imgUrlString = imageFile.url!
-        let url = URL(string: imgUrlString)
-        cell.photoImageView.af_setImage(withURL: url!)
-        return cell
+        let post = posts[indexPath.section]
+        let comments = (post["comments"] as? [PFObject]) ?? []
+        
+        if indexPath.row == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell") as! PostTableViewCell
+            let user = post["author"] as? PFUser
+            cell.usernameLabel.text = user?.username
+            cell.captionLabel.text = post["caption"] as? String
+            let imageFile = post["image"] as! PFFileObject
+            let imgUrlString = imageFile.url!
+            let url = URL(string: imgUrlString)
+            cell.photoImageView.af_setImage(withURL: url!)
+            return cell
+        } else if indexPath.row <= comments.count {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CommentTableViewCell") as! CommentTableViewCell
+            let comment = comments[indexPath.row - 1]
+            cell.commentLabel.text = comment["text"] as? String
+            let user = comment["author"] as! PFUser
+            cell.nameLabel.text = user.username
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "AddCommentCell")!
+            return cell
+        }
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 400
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let post = posts[indexPath.row]
+        let comments = (post["comments"] as? [PFObject]) ?? []
+        if indexPath.row == comments.count + 1 {
+            showCommentBar = true
+            becomeFirstResponder()
+            commentBar.inputTextView.becomeFirstResponder()
+        }
+//        comment["text"] = "Some text"
+//        comment["post"] = post
+//        comment["author"] = PFUser.current()
+//        post.add(comment, forKey: "comments")
+//        post.saveInBackground { (success, error) in
+//            if success {
+//                print("Comment saved")
+//            } else {
+//                print("Error: \(error!.localizedDescription)")
+//            }
+//        }
     }
 }
