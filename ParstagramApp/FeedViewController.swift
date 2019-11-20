@@ -20,12 +20,13 @@ class FeedViewController: UIViewController, MessageInputBarDelegate {
     
     var window: UIWindow?
     var posts = [PFObject]()
-    var userposts = [PFObject]()
+    var selectedPost: PFObject!
+    let currentDateTime = Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         commentBar.inputTextView.placeholder = "Add a comment..."
-//        commentBar.sendButton.image = UIImageView(image: UIImage(named: ""))
+        commentBar.sendButton.image = UIImage(named: "send")
         commentBar.sendButton.title = "Post"
         commentBar.delegate = self
         tableView.delegate = self
@@ -33,8 +34,8 @@ class FeedViewController: UIViewController, MessageInputBarDelegate {
         tableView.keyboardDismissMode = .interactive
         let center = NotificationCenter.default
         center.addObserver(self, selector: #selector(heyboardWillBeHiden), name: UIResponder.keyboardWillHideNotification, object: nil)
-//        tableView.tableFooterView = UIView()
         DataRequest.addAcceptableImageContentTypes(["application/octet-stream"])
+        tableView.tableFooterView = UIView()
     }
     
     override var inputAccessoryView: UIView? {
@@ -71,7 +72,19 @@ class FeedViewController: UIViewController, MessageInputBarDelegate {
     }
     func messageInputBar(_ inputBar: MessageInputBar, didPressSendButtonWith text: String) {
         // Create a comment
-        
+        let comment = PFObject(className: "Comments")
+        comment["text"] = text
+        comment["post"] = selectedPost
+        comment["author"] = PFUser.current()
+        selectedPost.add(comment, forKey: "comments")
+        selectedPost.saveInBackground { (success, error) in
+           if success {
+                print("Comment saved")
+            } else {
+                print("Error: \(error!.localizedDescription)")
+            }
+        }
+        tableView.reloadData()
         // clear and dissmis input
         commentBar.inputTextView.text = nil
         showCommentBar = false
@@ -106,7 +119,7 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell") as! PostTableViewCell
             let user = post["author"] as? PFUser
-            cell.usernameLabel.text = user?.username
+            cell.usernameLabel.text = user!.username! + " "
             cell.captionLabel.text = post["caption"] as? String
             let imageFile = post["image"] as! PFFileObject
             let imgUrlString = imageFile.url!
@@ -127,23 +140,14 @@ extension FeedViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let post = posts[indexPath.row]
+        let post = posts[indexPath.section]
         let comments = (post["comments"] as? [PFObject]) ?? []
         if indexPath.row == comments.count + 1 {
             showCommentBar = true
             becomeFirstResponder()
             commentBar.inputTextView.becomeFirstResponder()
+            selectedPost = post
         }
-//        comment["text"] = "Some text"
-//        comment["post"] = post
-//        comment["author"] = PFUser.current()
-//        post.add(comment, forKey: "comments")
-//        post.saveInBackground { (success, error) in
-//            if success {
-//                print("Comment saved")
-//            } else {
-//                print("Error: \(error!.localizedDescription)")
-//            }
-//        }
     }
 }
+

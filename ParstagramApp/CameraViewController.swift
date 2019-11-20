@@ -10,12 +10,17 @@ import UIKit
 import AlamofireImage
 import Parse
 
+enum ImageToEdit {
+    case profileImage
+}
+
 class CameraViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var commentField: UITextField!
     @IBOutlet weak var postB: UIButton!
-    
+    private var settingImage: ImageToEdit?
+    private var selectedImage: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +32,41 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
         imageView.layer.borderWidth = 0.1
         imageView.layer.cornerRadius = 10
     }
+    
+    @IBAction func tapGesture(_ sender: Any) {
+       settingImage = .profileImage
+        let alert = UIAlertController(title: "Selecte", message: nil, preferredStyle: .actionSheet)
+        let camera = UIAlertAction(title: "Camera", style: .default) { (action) in
+            self.camera()
+        }
+        let library = UIAlertAction(title: "Photo Library", style: .default) { (action) in
+            self.photoLibrary()
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .destructive) { (action) in
+            
+        }
+        alert.addAction(camera)
+        alert.addAction(library)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+    }
+    func camera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera){
+            let myPickerController = UIImagePickerController()
+            myPickerController.delegate = self;
+            myPickerController.sourceType = .camera
+            present(myPickerController, animated: true, completion: nil)
+        }
+    }
+    func photoLibrary(){
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
+            let myPickerController = UIImagePickerController()
+            myPickerController.delegate = self;
+            myPickerController.sourceType = .photoLibrary
+            present(myPickerController, animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func submitButton(_ sender: Any) {
         submitPost()
     }
@@ -70,10 +110,18 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let imageInfo = info[.editedImage] as! UIImage
+        guard let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
+            print("original image not available")
+            return }
         let imageSize = CGSize(width: 300, height: 300)
-        let scaleImage = imageInfo.af_imageScaled(to: imageSize)
-        imageView.image = scaleImage
+        let scaleImage = originalImage.af_imageAspectScaled(toFill: imageSize)
+        if settingImage == .profileImage {
+            selectedImage = scaleImage
+            imageView.image = scaleImage
+
+        } else {
+            print("No Image was selected for the profile")
+        }
         dismiss(animated: true, completion: nil)
     }
 }

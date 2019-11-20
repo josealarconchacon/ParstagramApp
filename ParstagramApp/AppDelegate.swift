@@ -24,12 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 configuration.server = "https://fast-bayou-20286.herokuapp.com/parse"
             })
         )
-//        if PFUser.current() != nil {
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let destination = storyboard.instantiateViewController(withIdentifier: "FeedNavegation")
-//            window?.rootViewController = destination
-//            print(destination)
-//        }
         return true
     }
 

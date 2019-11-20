@@ -63,12 +63,13 @@
     {
       "size" : "40x40",
       "idiom" : "ipad",
-      "filename" : "icons8-instagram-40.png",
+      "filename" : "instagram.png",
       "scale" : "1x"
     },
     {
-      "idiom" : "ipad",
       "size" : "40x40",
+      "idiom" : "ipad",
+      "filename" : "logo.jpg",
       "scale" : "2x"
     },
     {
