@@ -12,6 +12,7 @@ The following **required** functionality is completed:
 - [x] User can log out. (1pt)
 - [x] User can view comments on a post. (3pts)
 - [x] User can add a new comment. (5pts)
+- [x] User can Run the app on the phone and use the camera to take the photo
 
 
 
