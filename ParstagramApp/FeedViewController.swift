@@ -21,7 +21,7 @@ class FeedViewController: UIViewController, MessageInputBarDelegate {
     var window: UIWindow?
     var posts = [PFObject]()
     var selectedPost: PFObject!
-    let currentDateTime = Date()
+    var user = PFUser.current()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +70,7 @@ class FeedViewController: UIViewController, MessageInputBarDelegate {
             }
         }
     }
+
     func messageInputBar(_ inputBar: MessageInputBar, didPressSendButtonWith text: String) {
         // Create a comment
         let comment = PFObject(className: "Comments")
@@ -91,13 +92,21 @@ class FeedViewController: UIViewController, MessageInputBarDelegate {
         becomeFirstResponder()
         commentBar.inputTextView.resignFirstResponder()
     }
-    
-    @IBAction func onLogoutButton(_ sender: Any) {
-        PFUser.logOut()
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let destination = storyboard.instantiateViewController(withIdentifier: "ViewController")
-        let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
-        sceneDelegate.window?.rootViewController = destination
+    @IBAction func signOutButton(_ sender: Any) {
+        let alert = UIAlertController(title: user!.username, message: "Would you like to logout", preferredStyle: .actionSheet)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            //
+        }
+        let logOut = UIAlertAction(title: "Log Out", style: .destructive) { (action) in
+            PFUser.logOut()
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let destination = storyboard.instantiateViewController(withIdentifier: "ViewController")
+            let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
+            sceneDelegate.window?.rootViewController = destination
+        }
+        alert.addAction(logOut)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
     }
 }
 

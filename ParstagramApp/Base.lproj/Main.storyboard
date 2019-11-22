@@ -250,10 +250,10 @@
                         <viewLayoutGuide key="safeArea" id="F4Z-T9-ugX"/>
                     </view>
                     <navigationItem key="navigationItem" id="wpT-Ba-fPH">
-                        <barButtonItem key="leftBarButtonItem" title="LogOut" id="qiu-mo-W3W">
-                            <color key="tintColor" red="0.12984204290000001" green="0.12984612579999999" blue="0.12984395030000001" alpha="0.91711258569999998" colorSpace="custom" customColorSpace="sRGB"/>
+                        <barButtonItem key="leftBarButtonItem" image="equal.circle.fill" catalog="system" id="lJd-gG-DfU">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
-                                <action selector="onLogoutButton:" destination="3PX-LK-c5l" id="bv5-3I-niU"/>
+                                <action selector="signOutButton:" destination="3PX-LK-c5l" id="1FK-z0-L4m"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="camera.viewfinder" catalog="system" id="Q8s-X0-Z3w">
@@ -269,7 +269,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sOK-No-l6B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2456.8000000000002" y="-305.39730134932535"/>
+            <point key="canvasLocation" x="2460" y="-280.20989505247377"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="rZE-Fb-XER">
@@ -347,7 +347,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3185" y="-295"/>
+            <point key="canvasLocation" x="3129" y="-279"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="8wW-aG-arh">
@@ -373,6 +373,7 @@
         <image name="arrowshape.turn.up.left.2.fill" catalog="system" width="64" height="42"/>
         <image name="camera.viewfinder" catalog="system" width="64" height="56"/>
         <image name="circle.grid.2x2.fill" catalog="system" width="64" height="56"/>
+        <image name="equal.circle.fill" catalog="system" width="64" height="60"/>
         <image name="image_placeholder" width="375" height="375"/>
     </resources>
 </document>

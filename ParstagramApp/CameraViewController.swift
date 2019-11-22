@@ -11,7 +11,7 @@ import AlamofireImage
 import Parse
 
 enum ImageToEdit {
-    case profileImage
+    case setImage
 }
 
 class CameraViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -25,7 +25,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         commentField.placeholder = "Wite about your post"
-        postB.layer.borderWidth = 0.05
+        postB.layer.borderWidth = 0.09
         postB.layer.cornerRadius = 10
         postB.backgroundColor = UIColor.white
         postB.layer.borderColor = UIColor.black.cgColor
@@ -34,7 +34,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
     
     @IBAction func tapGesture(_ sender: Any) {
-       settingImage = .profileImage
+       settingImage = .setImage
         let alert = UIAlertController(title: "Selecte", message: nil, preferredStyle: .actionSheet)
         let camera = UIAlertAction(title: "Camera", style: .default) { (action) in
             self.camera()
@@ -115,7 +115,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
             return }
         let imageSize = CGSize(width: 300, height: 300)
         let scaleImage = originalImage.af_imageAspectScaled(toFill: imageSize)
-        if settingImage == .profileImage {
+        if settingImage == .setImage {
             selectedImage = scaleImage
             imageView.image = scaleImage
 
