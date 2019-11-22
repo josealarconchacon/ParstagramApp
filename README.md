@@ -6,12 +6,12 @@ Time spent: **6** hours spent in total
 
 The following **required** functionality is completed:
 
-- [x] User can sign up to create a new account. (1pt)
-- [x] User can take a photo, add a caption, and post it to the server. (3pt)
-- [x] User stays logged in across restarts. (1pt)
-- [x] User can log out. (1pt)
-- [x] User can view comments on a post. (3pts)
-- [x] User can add a new comment. (5pts)
+- [x] User can sign up to create a new account.
+- [x] User can take a photo, add a caption, and post it to the server.
+- [x] User stays logged in across restarts.
+- [x] User can log out.
+- [x] User can view comments on a post.
+- [x] User can add a new comment.
 - [x] User can Run the app on the phone and use the camera to take the photo
 
 
